@@ -28,12 +28,7 @@ from tmtoolkit.topicmod.model_io import save_ldamodel_summary_to_excel
 from tmtoolkit.topicmod.model_stats import exclude_topics
 
 
-#
-#     topic
-#       modelling
-#           methods
-#
-def reviews_tocsv(revtxt_inp='/home/pfialho/data/reviews.txt', revcsv_outp="/home/pfialho/data/reviews.csv", load_fromcache=1):
+def reviews_tocsv(revtxt_inp='reviews.txt', revcsv_outp="reviews.csv", load_fromcache=1):
     print('.. get csv')
     if load_fromcache and os.path.isfile(revcsv_outp):
         return revcsv_outp
@@ -51,10 +46,7 @@ def reviews_tocsv(revtxt_inp='/home/pfialho/data/reviews.txt', revcsv_outp="/hom
     return revcsv_outp
 
 
-# TODO: generate various corpora versions,
-#  with different normalization techniques,
-#  to reduce/increase the number of available tokens
-def tm_revcsv_normcorpus(revcsv_inp="/home/pfialho/data/reviews.csv", revcorp_outp='corp_norm.p', load_fromcache=1):
+def tm_revcsv_normcorpus(revcsv_inp="reviews.csv", revcorp_outp='corp_norm.p', load_fromcache=1):
     print('.. get corpus: lemma punct lower rem-st3 rem-num rem-comm0.85 rem-uncomm0.05 filter-posN')
     if load_fromcache and os.path.isfile(revcorp_outp):
         return load_corpus_from_picklefile(revcorp_outp)
@@ -120,7 +112,8 @@ def tm_evalmodels(dtmat, load_fromcache=1, showplot=0):
     return eval_results_by_topics
 
 
-# run tm_evalmodels first, to select the ideal number of topics (num_topics)
+# run tm_evalmodels first, 
+# to select the best number of topics (num_topics)
 def tm_getmodel(eval_results_by_topics, num_topics, dtmat, vocab):
     best_tm = [m for k, m in eval_results_by_topics if k == num_topics][0]['model']
 
@@ -136,15 +129,14 @@ def tm_getmodel(eval_results_by_topics, num_topics, dtmat, vocab):
     return best_tm, topic_labels
 
 
+# view topic_labels (from tm_getmodel) first, 
+# to select uninform_topics
 def tm_filter_exp(best_tm, topic_labels, uninform_topics=[0, 2, 8, 9, 10, 11, 15, 19], toxlsx_path=''):
     new_doc_topic, new_topic_word, new_topic_mapping = \
         exclude_topics(uninform_topics, best_tm.doc_topic_,
                        best_tm.topic_word_, return_new_topic_mapping=True)
 
     new_topic_labels = np.delete(topic_labels, uninform_topics)
-
-    # topic_word_rel = topic_word_relevance(best_tm.topic_word_, best_tm.doc_topic_,
-    #                                       doc_lengths_bg, lambda_=0.6)
 
     if toxlsx_path:
         dtmat, doc_labels, vocab = tm_getdtm()
