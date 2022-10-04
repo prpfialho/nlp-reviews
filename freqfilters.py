@@ -105,24 +105,7 @@ def get_freqdicts(load_cache=1):
                     neg_freq[sass_w] = val + 1
                 # else:     # neutral
 
-                # if sass[1] > 0.3 or sass[1] < -0.3:
-                #     sass_w = " ".join(sass[0]).lower()
-                #
-                #     if not sass_w in pol_revs:
-                #         pol_revs[sass_w] = set()
-                #     pol_revs[sass_w].add(i)
-                #
-                #     val = pol_freq.get(sass_w, 0)
-                #     pol_freq[sass_w] = val + 1
-
-            for sent in doc.sents:
-                # print(sent.text)
-
-                # for token in sent:
-                #     if token.dep_ == 'nsubj':
-                #         print(token.text, ' | ', token.dep_, ' | ', token.head.text, ' | ', token.head.pos_, ' | ',
-                #               [child for child in token.children])
-
+            for sent in doc.sents:               
                 #
                 #   Syntax parsing : noun phrases
                 #
@@ -131,16 +114,11 @@ def get_freqdicts(load_cache=1):
                 # review frequency
                 #
                 for chunk in sent.noun_chunks:
-                    # print(chunk.text, ' | ', chunk.root.text, ' | ', chunk.root.dep_, ' | ',
-                    #       chunk.root.head.text, ' | ', chunk.root.head.pos_)
-
                     full_w_chunk = 1
                     for c_w in chunk:
                         if not c_w.is_alpha:  # or c_w.is_stop c_w.pos_ != "NOUN" or:
                             full_w_chunk = 0
                             break
-                        # if '6' in c_w.text:
-                        #     print()
 
                     if full_w_chunk:
                         if chunk.root.head.pos_ != 'VERB' and len(chunk) > 1:
@@ -151,10 +129,7 @@ def get_freqdicts(load_cache=1):
                             nchunk_revs[head_w].add(i)
 
                             val = nchunk_freq.get(head_w, 0)
-                            nchunk_freq[head_w] = val + 1
-                    # print(chunk.text, ' | ', chunk.root.text, ' | ', chunk.root.dep_, ' | ',
-                    #       chunk.root.head.text, ' | ', chunk.root.head.pos_)
-                # print('\n')
+                            nchunk_freq[head_w] = val + 1                   
 
             i += 1
 
@@ -209,12 +184,3 @@ if __name__ == '__main__':
     showwordcloud(nchunk_revs_filt_freq)
     # showwordcloud(coref_freq_filt)
     showwordcloud(coref_revs_filt_freq)
-
-    # mat, doc_labels, vocab = pickle.load(open("mat_docs_topics.p", "rb"))
-    # fig, ax = plt.subplots(figsize=(32, 8))
-    # which_docs = random.sample(doc_labels, 30)
-    # which_topics = list(set(vocab) & set(coref_freq_filt.keys()))     # random.sample(list(vocab), 30)
-    # plot_doc_topic_heatmap(fig, ax, mat.toarray(), doc_labels, topic_labels=vocab,
-    #                        which_documents=which_docs,
-    #                        which_topics=which_topics)
-    # plt.show()
