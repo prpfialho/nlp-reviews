@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     print(". plot topic model subset")
     fig, ax = plt.subplots(figsize=(32, 8))
-    which_docs = random.sample(doc_labels, 5)
+    which_docs = random.sample(doc_labels, 20)
     plot_doc_topic_heatmap(fig, ax, topcmodl_filt, doc_labels,
                            topic_labels=topclbl_filt,
                            which_documents=which_docs)
